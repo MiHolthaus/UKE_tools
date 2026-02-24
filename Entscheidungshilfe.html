@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Entscheidungshilfe <V1 class="2"></V1></title>
+  <style>
+    :root { --border:#80b7ee; --muted:#353d46; --bg:#ffffff; --card:#86caf1; }
+    body { margin:0; font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:#111; }
+    .wrap { max-width:900px; margin:0 auto; padding:16px; }
+    header { display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:16px; }
+    h1 { font-size:18px; margin:0; }
+    .toolbar { display:flex; gap:8px; align-items:center; }
+    button, .btn {
+      border:1px solid var(--border); background:#fff; padding:8px 10px; border-radius:10px;
+      cursor:pointer; font:inherit;
+    }
+    button:hover { background:#f3f4f6; }
+    .lang { display:flex; gap:6px; }
+    .lang button[aria-pressed="true"] { background:#111; color:#fff; border-color:#111; }
+    .card { border:1px solid var(--border); border-radius:14px; padding:14px; background:#fff; margin-bottom:12px; }
+    .qtitle { font-weight:600; margin:0 0 10px 0; }
+    .opts { display:flex; flex-wrap:wrap; gap:8px; }
+    .opt { border:1px solid var(--border); border-radius:999px; padding:8px 12px; background:#fff; }
+    .opt[aria-pressed="true"] { background:#111; color:#fff; border-color:#111; }
+    .muted { color:var(--muted); font-size:13px; }
+    .result { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; }
+    .result h2 { font-size:16px; margin:0 0 8px 0; }
+    .solution { padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:#fff; font-weight:600; }
+    .path { margin-top:10px; }
+    .path ul { margin:6px 0 0 18px; }
+    @media print {
+      .no-print { display:none !important; }
+      body { background:#fff; }
+      .wrap { max-width:none; padding:0; }
+      .card { break-inside:avoid; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1 id="appTitle">Entscheidungshilfe V1.1 </h1>
+      <div class="toolbar no-print">
+        <div class="lang" aria-label="Sprache">
+          <button id="btnDE" aria-pressed="true">DE</button>
+          <button id="btnEN" aria-pressed="false">EN</button>
+        </div>
+        <button id="btnReset">Neu starten</button>
+        <button id="btnPrint" onclick="window.print()">Drucken / PDF</button>
+      </div>
+    </header>
+
+    <main id="app"></main>
+
+    <section id="result" class="result" hidden>
+      <h2 id="resultTitle">Ergebnis</h2>
+      <div class="solution" id="solutionText">—</div>
+      <div class="path">
+        <div class="muted" id="pathTitle">Entscheidungsweg</div>
+        <ul id="pathList"></ul>
+      </div>
+    </section>
+
+    
+    <script>
+      // ====== EDITIERBLOCK START ======
+      const MODEL = {
+        startId: "intro",
+        nodes: [
+          {
+            id: "intro",
+            text: { de: "Was möchtest du in der Spülküche bearbeiten lassen?", en: "What would you like to have processed in the scullery?" },
+            options: [
+              { value: "media", label: { de: "Medien, Lösungen, Instrumente, Utensilien o.ä.", en: "Media, solutions, instruments, utensils etc." }, nextId: "media_1" },
+              { value: "contaminated_liq", label: { de: "Kontaminiertes Laborgeschirr, Flaschen oder Flüssigbafälle", 
+              en: "Contaminated laboratory ware, bottles, or liquid waste" }, nextId: "contliq_1" },
+              { value: "contaminated_solid", label: { de: "Kontaminierte Festabfälle oder Agarschalen", 
+              en: "Contaminated solid waste, or agar plates" }, nextId: "result_solid" },
+              { value: "contaminated_sharp", label: { de: "Kontaminierte scharfkantige Abfälle", 
+              en: "Contaminated sharp objects" }, nextId: "result_sharp" },
+              { value: "wash", label: { de: "Laborgeschirr", en: "laboratory ware" }, nextId: "wash_0" }
+            ]
+          },
+          {
+            id: "media_1",
+            text: { de: "Wie soll sterilisiert werden?", en: "How should sterilization be carried out?" },
+            options: [
+              { value: "Autoklav", label: { de: "Autoklav (Dampf, 121°C)", en: "Autoclave (steam, 121°C)" }, nextId: "media_2" },
+              { value: "Ofen", label: { de: "Ofen (trocken, 200°C)", en: "Oven (dry, 200°C)" }, nextId: "result_media_oven" }
+            ]
+          },
+          {
+            id: "media_2",
+            text: { de: "Wie muss gelagert werden?", en: "How should it be stored?" },
+            options: [
+              { value: "A", label: { de: "Raumtemperatur", en: "room temperature" }, nextId: "result_media_a" },
+              { value: "Agar", label: { de: "60°C Wasserbad", en: "60°C waterbath" }, nextId: "result_media_agar" }
+            ]
+          },
+          {
+            id: "contliq_1",
+            text: { de: "Möchtest du deinen Gegenstand steril zurückhaben? (sonst gereinigt)", en: "Would you like your object returned sterile? (otherwise cleaned)" },
+            options: [
+              { value: "yes", label: { de: "Ja", en: "Yes" }, nextId: "contliq_2" },
+              { value: "no", label: { de: "Nein", en: "No" }, nextId: "result_liq_green" }
+            ]
+          },
+          {
+            id: "wash_0",
+            text: { de: "Ist dein Geschirr kontaminiert?", en: "Is your lab ware contaminated?" },
+            options: [
+              { value: "yes", label: { de: "Ja", en: "Yes" }, nextId: "contliq_1" },
+              { value: "no", label: { de: "Nein", en: "No" }, nextId: "wash_1" }
+            ]
+          },
+          {
+            id: "wash_01",
+            text: { de: "Soll dein Geschirr gespült werden?", en: "Would you like your lab ware cleaned?" },
+            options: [
+              { value: "yes", label: { de: "Ja", en: "Yes" }, nextId: "wash_1" },
+              { value: "no", label: { de: "Nein", en: "No" }, nextId: "media_1" }
+            ]
+          },
+          {
+            id: "wash_1",
+            text: { de: "Möchtest du deinen Gegenstand steril zurückhaben? (sonst nur gereinigt)", en: "Would you like your object returned sterile? (otherwise only cleaned)" },
+            options: [
+              { value: "yes", label: { de: "Ja", en: "Yes" }, nextId: "wash_2" },
+              { value: "no", label: { de: "Nein", en: "No" }, nextId: "result_wash_green" }
+            ]
+          },
+          {
+            id: "wash_2",
+            text: { de: "Wie soll sterilisiert werden?", en: "How should sterilization be carried out?" },
+            options: [
+              { value: "Autoklav", label: { de: "Autoklav (Dampf, 121°C)", en: "Autoclave (steam, 121°C)" }, nextId: "result_wash_blue" },
+              { value: "Ofen", label: { de: "Ofen (trocken, 200°C)", en: "Oven (dry, 200°C)" }, nextId: "result_wash_orange" }
+            ]
+          },
+          {
+            id: "contliq_2",
+            text: { de: "Wie soll sterilisiert werden?", en: "How should sterilization be carried out?" },
+            options: [
+              { value: "Autoklav", label: { de: "Autoklav (Dampf, 121°C)", en: "Autoclave (steam, 121°C)" }, nextId: "result_liq_blue" },
+              { value: "Ofen", label: { de: "Ofen (trocken, 200°C)", en: "Oven (dry, 200°C)" }, nextId: "result_liq_orange" }
+            ]
+          },
+          // ===== Ergebnis-Knoten =====
+{
+  id: "result_solid",
+  image: "https://sluggraphix.de/abfall/tool_solid.png",
+text: {
+    de: `
+<ul>
+  <li>Autoklavierbeutel</li>
+  <li>Abfallsammler mit Risikogruppenschild, ab Risikogruppe 2 + Biohazard-Zeichen</li>
+  <li>Indikatorband</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Autoclave bags</li>
+  <li>Waste collectors with risk group label, from risk group 2 + biohazard symbol</li>
+  <li>Indicator tape</li>
+</ul>
+`
+ },
+  options: []
+},
+{
+  id: "result_sharp",
+  image: "https://sluggraphix.de/abfall/tool_sharp.png",
+  text: {
+    de: `
+<ul>
+  <li>Kanülenbox</li>
+  <li>Risikogruppe</li>
+  <li>Zusatz „Müll“, „Abfall“ oder „waste“</li>
+  <li>Indikatorband</li>
+  <li>nicht einrasten beim verschließen, nur lose auflegen und mit Tape sichern</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Needle box</li>
+  <li>Risk group</li>
+  <li>Addition of “Müll,” “Abfall,” or “waste”</li>
+  <li>Indicator tape</li>
+  <li>Do not snap shut when closing, just place loosely on top and secure with tape</li>
+</ul>
+`
+ },
+  options: []
+},
+{
+  id: "result_media_oven",
+  image: "https://sluggraphix.de/abfall/tool_oven.png",
+  text: {
+    de: `
+<ul>
+  <li>autoklavierbeständig</li>
+  <li>Raumnummer mit Etagen- und ggfs. Gebäudeteilnummer</li>
+  <li>Indikatorband + "O" (= Ofen)</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>autoclavable</li>
+  <li>Room number with floor and, if applicable, building section number</li>
+  <li>Indicator tape + “O” (= oven)</li>
+</ul>
+`
+ },
+  options: []
+},
+{
+  id: "result_media_a",
+  image: "https://sluggraphix.de/abfall/tool_a.png",
+text: {
+    de: `
+<ul>
+  <li>autoklavierbeständig</li>
+  <li>Flaschen nicht mehr als 2/3 gefüllt</li>
+  <li>Raumnummer mit Etagen- und ggfs. Gebäudeteilnummer</li>
+  <li>Indikatorband + "A" (= Autoklav)</li>
+  <li>Abgabe in der Spülküche (bis 9:00 für Bearbeitung am selben Tag)</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Autoclavable</li>
+  <li>Bottles no more than 2/3 full</li>
+  <li>Room number with floor and, if applicable, building section number</li>
+  <li>Indicator tape + “A” (= autoclave)</li>
+  <li>Drop off in the scullery (by 9:00 a.m. for same-day processing)</li>
+</ul>
+`
+ },
+  options: []
+},
+{
+  id: "result_media_agar",
+  image: "https://sluggraphix.de/abfall/tool_agar.png",
+text: {
+    de: `
+<ul>
+  <li>autoklavierbeständig</li>
+  <li>Flaschen nicht mehr als 2/3 gefüllt</li>
+  <li>Raumnummer mit Etagen- und ggfs. Gebäudeteilnummer</li>
+  <li>Indikatorband + "Agar" (= Code für 60°C Wasserbad)</li>
+  <li>Abgabe in der Spülküche (bis 9:00 für Bearbeitung am selben Tag)</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Autoclavable</li>
+  <li>Bottles no more than 2/3 full</li>
+  <li>Room number with floor and, if applicable, building section number</li>
+  <li>Indicator tape + “Agar” (= code for 60°C water bath)</li>
+  <li>Drop off in the scullery (by 9:00 a.m. for same-day processing)</li>
+</ul>
+`
+ },
+  options: []
+},
+{
+  id: "result_liq_green",
+  image: "https://sluggraphix.de/abfall/tool_liq_green.png",
+  text: {
+    de: `
+<ul>
+  <li>Indikatorband</li>
+  <li>Risikogruppe ("S1", "S2")</li>
+  <li>Zusatz „Müll“, „Abfall“ oder „waste“</li>
+  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
+  <li>grünes Klebeband</li>
+  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Indicator tape</li>
+  <li>Risk group ("S1", "S2")</li>
+  <li>Addition of “Müll” “Abfall” or “waste”</li>
+  <li>Room number including floor and, if applicable, building section</li>
+  <li>green tape</li>
+  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
+</ul>
+`
+  },
+  options: []
+},
+{
+  id: "result_liq_blue",
+  image: "https://sluggraphix.de/abfall/tool_liq_blue.png",
+  text: {
+    de: `
+<ul>
+  <li>Indikatorband</li>
+  <li>Risikogruppe ("S1", "S2")</li>
+  <li>Zusatz „Müll“, „Abfall“ oder „waste“</li>
+  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
+  <li>blaues Klebeband</li>
+  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Indicator tape</li>
+  <li>Risk group ("S1", "S2")</li>
+  <li>Addition of “Müll” “Abfall” or “waste”</li>
+  <li>Room number including floor and, if applicable, building section</li>
+  <li>blue tape</li>
+  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
+</ul>
+`
+  },
+  options: []
+},
+{
+  id: "result_liq_orange",
+  image: "https://sluggraphix.de/abfall/tool_liq_orange.png",
+text: {
+    de: `
+<ul>
+  <li>Indikatorband</li>
+  <li>Risikogruppe ("S1", "S2")</li>
+  <li>Zusatz „Müll“, „Abfall“ oder „waste“</li>
+  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
+  <li>orangefarbenes Klebeband</li>
+  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Indicator tape</li>
+  <li>Risk group ("S1", "S2")</li>
+  <li>Addition of “Müll” “Abfall” or “waste”</li>
+  <li>Room number including floor and, if applicable, building section</li>
+  <li>orange tape</li>
+  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
+</ul>
+`
+  },
+  options: []
+},
+{
+  id: "result_wash_green",
+  image: "https://sluggraphix.de/abfall/tool_wash_green.png",
+  text: {
+    de: `
+<ul>
+  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
+  <li>grünes Klebeband</li>
+  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Room number including floor and, if applicable, building section</li>
+  <li>green tape</li>
+  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
+</ul>
+`
+  },
+  options: []
+},
+{
+  id: "result_wash_blue",
+  image: "https://sluggraphix.de/abfall/tool_wash_blue.png",
+  text: {
+    de: `
+<ul>
+  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
+  <li>blaues Klebeband</li>
+  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Room number including floor and, if applicable, building section</li>
+  <li>blue tape</li>
+  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
+</ul>
+`
+  },
+  options: []
+},
+{
+  id: "result_wash_orange",
+  image: "https://sluggraphix.de/abfall/tool_wash_orange.png",
+  text: {
+    de: `
+<ul>
+  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
+  <li>orangefarbenes Klebeband</li>
+  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
+</ul>
+`,
+    en: `
+<ul>
+  <li>Room number including floor and, if applicable, building section</li>
+  <li>orange tape</li>
+  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
+</ul>
+`
+  },
+  options: []
+}
+
+
+          
+          
+          
+        ],
+        
+        
+        
+      };
+      // ====== EDITIERBLOCK ENDE ======
+
+      // ====== App-Logik ======
+      const appEl = document.getElementById("app");
+      const resultEl = document.getElementById("result");
+      const solutionEl = document.getElementById("solutionText");
+      const pathListEl = document.getElementById("pathList");
+
+      const btnDE = document.getElementById("btnDE");
+      const btnEN = document.getElementById("btnEN");
+      const btnReset = document.getElementById("btnReset");
+
+      let lang = "de";
+      let answers = []; // [{nodeId, optionValue}]
+      let visibleNodeIds = []; // Reihenfolge der angezeigten Fragen
+
+      const nodeById = (id) => MODEL.nodes.find(n => n.id === id);
+
+      function t(obj) { return obj?.[lang] ?? ""; }
+
+      function setLang(newLang) {
+        lang = newLang;
+        btnDE.setAttribute("aria-pressed", String(lang === "de"));
+        btnEN.setAttribute("aria-pressed", String(lang === "en"));
+        document.documentElement.lang = lang;
+        document.getElementById("appTitle").textContent = (lang === "de") ? "Entscheidungshilfe" : "Decision Helper";
+        document.getElementById("resultTitle").textContent = (lang === "de") ? "Ergebnis" : "Result";
+        document.getElementById("pathTitle").textContent = (lang === "de") ? "Entscheidungsweg" : "Decision path";
+        btnReset.textContent = (lang === "de") ? "Neu starten" : "Restart";
+        render();
+      }
+
+      function reset() {
+        answers = [];
+        visibleNodeIds = [MODEL.startId];
+        resultEl.hidden = true;
+        render();
+      }
+
+      function getAnswer(nodeId) {
+        return answers.find(a => a.nodeId === nodeId)?.optionValue ?? null;
+      }
+
+      function setAnswer(nodeId, optionValue) {
+        // answers bis nodeId behalten, alles danach löschen (weil Pfad sich ändern kann)
+        const idx = visibleNodeIds.indexOf(nodeId);
+        visibleNodeIds = visibleNodeIds.slice(0, idx + 1);
+
+        answers = answers.filter(a => visibleNodeIds.includes(a.nodeId));
+        answers = answers.filter(a => a.nodeId !== nodeId);
+        answers.push({ nodeId, optionValue });
+
+        // nächsten Knoten hinzufügen
+        const node = nodeById(nodeId);
+        const opt = node.options.find(o => o.value === optionValue);
+        if (opt?.nextId && opt.nextId !== "END") {
+          visibleNodeIds.push(opt.nextId);
+          resultEl.hidden = true;
+        } else {
+          // Ende erreicht
+          resultEl.hidden = false;
+        }
+        render();
+      }
+
+      function renderQuestion(nodeId) {
+        const node = nodeById(nodeId);
+        if (!node) return;
+
+        const selected = getAnswer(nodeId);
+
+        const card = document.createElement("section");
+        card.className = "card";
+        card.setAttribute("data-node", nodeId);
+
+        const title = document.createElement("div");
+        title.className = "qtitle";
+        title.textContent = t(node.text);
+        card.appendChild(title);
+
+        const opts = document.createElement("div");
+        opts.className = "opts";
+
+        node.options.forEach(o => {
+          const b = document.createElement("button");
+          b.className = "opt";
+          b.type = "button";
+          b.textContent = t(o.label);
+          b.setAttribute("aria-pressed", String(selected === o.value));
+          b.addEventListener("click", () => setAnswer(nodeId, o.value));
+          opts.appendChild(b);
+        });
+
+        card.appendChild(opts);
+
+        const hint = document.createElement("div");
+        hint.className = "muted";
+        hint.style.marginTop = "10px";
+        hint.textContent = (lang === "de")
+          ? "Klicke eine Option. Die nächste Frage erscheint darunter."
+          : "Click an option. The next question will appear below.";
+        card.appendChild(hint);
+
+        appEl.appendChild(card);
+      }
+
+      function renderResult() {
+        if (resultEl.hidden) return;
+        const node = nodeById(visibleNodeIds[visibleNodeIds.length - 1]);
+  if (!node) return;
+
+solutionEl.innerHTML =
+  (node.image && typeof node.image === "string"
+    ? `<img src="${node.image}" alt="" style="max-width:100%;margin-bottom:12px;">`
+    : "")
+  + (node.text?.[lang] ?? "");
+
+
+        // Entscheidungsweg
+        pathListEl.innerHTML = "";
+        visibleNodeIds.forEach(nodeId => {
+          const node = nodeById(nodeId);
+          const val = getAnswer(nodeId);
+          if (!node || !val) return;
+          const opt = node.options.find(o => o.value === val);
+          const li = document.createElement("li");
+          li.textContent = `${t(node.text)} → ${t(opt.label)}`;
+          pathListEl.appendChild(li);
+        });
+      }
+
+function render() {
+  appEl.innerHTML = "";
+
+  visibleNodeIds.forEach(id => {
+    const node = nodeById(id);
+    if (!node) return;
+
+    // Nur Fragen rendern (Ergebnisse haben keine Optionen)
+    if (node.options && node.options.length > 0) {
+      renderQuestion(id);
+    } else {
+      // Ergebnis erreicht
+      resultEl.hidden = false;
+    }
+  });
+
+  renderResult();
+}
+
+
+      btnDE.addEventListener("click", () => setLang("de"));
+      btnEN.addEventListener("click", () => setLang("en"));
+      btnReset.addEventListener("click", reset);
+
+      // init
+      reset();
+    </script>
+  </div>
+</body>
+</html>
