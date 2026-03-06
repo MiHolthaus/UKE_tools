@@ -172,6 +172,7 @@ text: {
 {
   id: "result_sharp",
   image: "pic/tool_sharp.png",
+  image_mobile: "pic/tool_sharp_mobile.png",
   text: {
     de: `
 <ul>
@@ -197,6 +198,7 @@ text: {
 {
   id: "result_media_oven",
   image: "pic/tool_oven.png",
+  image_mobile: "pic/tool_oven_mobile.png",
   text: {
     de: `
 <ul>
@@ -218,6 +220,7 @@ text: {
 {
   id: "result_media_a",
   image: "pic/tool_a.png",
+  image_mobile: "pic/tool_a_mobile.png",
 text: {
     de: `
 <ul>
@@ -243,6 +246,7 @@ text: {
 {
   id: "result_media_agar",
   image: "pic/tool_agar.png",
+  image_mobile: "pic/tool_agar_mobile.png",
 text: {
     de: `
 <ul>
@@ -268,6 +272,7 @@ text: {
 {
   id: "result_liq_green",
   image: "pic/tool_liq_green.png",
+  image_mobile: "pic/tool_liq_green_mobile.png",
   text: {
     de: `
 <ul>
@@ -295,6 +300,7 @@ text: {
 {
   id: "result_liq_blue",
   image: "pic/tool_liq_blue.png",
+  image_mobile: "pic/tool_liq_blue_mobile.png",
   text: {
     de: `
 <ul>
@@ -322,6 +328,7 @@ text: {
 {
   id: "result_liq_orange",
   image: "pic/tool_liq_yellow.png",
+  image_mobile: "pic/tool_liq_yellow_mobile.png",
 text: {
     de: `
 <ul>
@@ -349,6 +356,7 @@ text: {
 {
   id: "result_wash_green",
   image: "pic/tool_wash_green.png",
+  image_mobile: "pic/tool_wash_green_mobile.png",
   text: {
     de: `
 <ul>
@@ -370,6 +378,7 @@ text: {
 {
   id: "result_wash_blue",
   image: "pic/tool_wash_blue.png",
+  image_mobile: "pic/tool_wash_blue_mobile.png",
   text: {
     de: `
 <ul>
@@ -391,6 +400,7 @@ text: {
 {
   id: "result_wash_orange",
   image: "pic/tool_wash_yellow.png",
+  image_mobile: "pic/tool_wash_yellow_mobile.png",
   text: {
     de: `
 <ul>
@@ -532,7 +542,7 @@ text: {
 
 solutionEl.innerHTML =
   (node.image && typeof node.image === "string"
-    ? `<img src="${node.image}" alt="" style="max-width:100%;margin-bottom:12px;">`
+    ? `<img src="${window.innerWidth < 700 ? node.image_mobile : node.image}" alt="" style="max-width:100%;margin-bottom:12px;">`
     : "")
   + (node.text?.[lang] ?? "");
 
