@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Entscheidungshilfe</title>
+  <title>Labororganisation</title>
   <style>
     :root { --border:#80b7ee; --muted:#353d46; --bg:#ffffff; --card:#86caf1; }
     body { margin:0; font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:#111; }
@@ -41,7 +41,7 @@
 <body>
   <div class="wrap">
     <header>
-      <h1 id="appTitle">Entscheidungshilfe V1.2</h1>  <!-- Hier ist die echte Ueberschrift! -->
+      <h1 id="appTitle">Labororganisation V1.0</h1>  <!-- Hier ist die echte Ueberschrift! -->
       <div class="toolbar no-print">
         <div class="lang" aria-label="Sprache">
           <button id="btnDE" aria-pressed="true">DE</button>
@@ -71,16 +71,16 @@
         nodes: [
           {
             id: "intro",
-            text: { de: "Was möchtest du in der Spülküche bearbeiten lassen?", en: "What would you like to have processed in the scullery?" },
+            text: { de: "Welche Services der Spülküche möchtest du nutzen?", en: "Which scullery services would you like to use??" },
             options: [
-              { value: "media", label: { de: "Medien, Lösungen, Instrumente, Utensilien o.ä.", en: "Media, solutions, instruments, utensils etc." }, nextId: "media_1" },
-              { value: "contaminated_liq", label: { de: "Kontaminiertes Laborgeschirr, Flaschen oder Flüssigbafälle", 
-              en: "Contaminated laboratory ware, bottles, or liquid waste" }, nextId: "contliq_1" },
-              { value: "contaminated_solid", label: { de: "Kontaminierte Festabfälle oder Agarschalen", 
-              en: "Contaminated solid waste, or agar plates" }, nextId: "result_solid" },
-              { value: "contaminated_sharp", label: { de: "Kontaminierte scharfkantige Abfälle", 
-              en: "Contaminated sharp objects" }, nextId: "result_sharp" },
-              { value: "wash", label: { de: "Laborgeschirr", en: "laboratory ware" }, nextId: "wash_0" }
+              { value: "media", label: { de: "Medien, Lösungen, Instrumente, Utensilien o.ä. sterilisieren lassen", en: "Have media, solutions, instruments, supplies, etc., sterilized" }, nextId: "result_media" },
+              { value: "contaminated_liq", label: { de: "Kontaminiertes Laborgeschirr, Flaschen oder Flüssigbafälle inaktivieren lassen", 
+              en: "Have contaminated labware, bottles, or liquid waste inactivated" }, nextId: "contliq_1" },
+              { value: "contaminated_solid", label: { de: "Kontaminierte Festabfälle oder Agarschalen inaktivieren lassen", 
+              en: "Have contaminated solid waste or agar plates inactivated" }, nextId: "result_solid" },
+              { value: "contaminated_sharp", label: { de: "Kontaminierte scharfkantige Abfälle inaktivieren lassen", 
+              en: "Have contaminated, sharp-edged waste inactivated" }, nextId: "result_sharp" },
+              { value: "wash", label: { de: "Laborgeschirr reinigen lassen", en: "Have labware cleaned" }, nextId: "wash_0" }
             ]
           },
           {
@@ -197,22 +197,20 @@ text: {
   options: []
 },
 {
-  id: "result_media_oven",
+  id: "result_media",
   image: "pic/tool_oven.png",
   image_mobile: "pic/tool_oven_mobile.png",
   text: {
     de: `
 <ul>
-  <li>autoklavierbeständig</li>
-  <li>Raumnummer mit Etagen- und ggfs. Gebäudeteilnummer</li>
-  <li>Indikatorband + "O" (= Ofen)</li>
+  <li>Keine Änderungen im Labor nötig!</li>
+  <li>Bereite deine Medien usw. mit der Entscheidungshilfe vor und bringe sie in die Spülküche.</li>
 </ul>
 `,
     en: `
 <ul>
-  <li>autoclavable</li>
-  <li>Room number with floor and, if applicable, building section number</li>
-  <li>Indicator tape + “O” (= oven)</li>
+  <li>No changes are needed in the lab!</li>
+  <li>Prepare your media, etc., using the decision-making guide, and bring them to the scullery.</li>
 </ul>
 `
  },
