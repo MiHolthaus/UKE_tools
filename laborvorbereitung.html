@@ -75,96 +75,35 @@
             options: [
               { value: "media", label: { de: "Medien, Lösungen, Instrumente, Utensilien o.ä. sterilisieren lassen", en: "Have media, solutions, instruments, supplies, etc., sterilized" }, nextId: "result_media" },
               { value: "contaminated_liq", label: { de: "Kontaminiertes Laborgeschirr, Flaschen oder Flüssigbafälle inaktivieren lassen", 
-              en: "Have contaminated labware, bottles, or liquid waste inactivated" }, nextId: "contliq_1" },
+              en: "Have contaminated labware, bottles, or liquid waste inactivated" }, nextId: "result_liq" },
               { value: "contaminated_solid", label: { de: "Kontaminierte Festabfälle oder Agarschalen inaktivieren lassen", 
               en: "Have contaminated solid waste or agar plates inactivated" }, nextId: "result_solid" },
               { value: "contaminated_sharp", label: { de: "Kontaminierte scharfkantige Abfälle inaktivieren lassen", 
               en: "Have contaminated, sharp-edged waste inactivated" }, nextId: "result_sharp" },
-              { value: "wash", label: { de: "Laborgeschirr reinigen lassen", en: "Have labware cleaned" }, nextId: "wash_0" }
+              { value: "wash", label: { de: "Laborgeschirr reinigen lassen", en: "Have labware cleaned" }, nextId: "result_wash" }
             ]
           },
-          {
-            id: "media_1",
-            text: { de: "Wie soll sterilisiert werden?", en: "How should sterilization be carried out?" },
-            options: [
-              { value: "Autoklav", label: { de: "Autoklav (Dampf, 121°C)", en: "Autoclave (steam, 121°C)" }, nextId: "media_2" },
-              { value: "Ofen", label: { de: "Ofen (trocken, 200°C)", en: "Oven (dry, 200°C)" }, nextId: "result_media_oven" }
-            ]
-          },
-          {
-            id: "media_2",
-            text: { de: "Wie muss gelagert werden?", en: "How should it be stored?" },
-            options: [
-              { value: "A", label: { de: "Raumtemperatur", en: "room temperature" }, nextId: "result_media_a" },
-              { value: "Agar", label: { de: "60°C Wasserbad", en: "60°C waterbath" }, nextId: "result_media_agar" }
-            ]
-          },
-          {
-            id: "contliq_1",
-            text: { de: "Möchtest du deinen Gegenstand steril zurückhaben? (sonst gereinigt)", en: "Would you like your object returned sterile? (otherwise cleaned)" },
-            options: [
-              { value: "yes", label: { de: "Ja", en: "Yes" }, nextId: "contliq_2" },
-              { value: "no", label: { de: "Nein", en: "No" }, nextId: "result_liq_green" }
-            ]
-          },
-          {
-            id: "wash_0",
-            text: { de: "Ist dein Geschirr kontaminiert?", en: "Is your lab ware contaminated?" },
-            options: [
-              { value: "yes", label: { de: "Ja", en: "Yes" }, nextId: "contliq_1" },
-              { value: "no", label: { de: "Nein", en: "No" }, nextId: "wash_01" }
-            ]
-          },
-          {
-            id: "wash_01",
-            text: { de: "Soll dein Geschirr gespült werden?", en: "Would you like your lab ware cleaned?" },
-            options: [
-              { value: "yes", label: { de: "Ja", en: "Yes" }, nextId: "wash_1" },
-              { value: "no", label: { de: "Nein", en: "No" }, nextId: "media_1" }
-            ]
-          },
-          {
-            id: "wash_1",
-            text: { de: "Möchtest du deinen Gegenstand steril zurückhaben? (sonst nur gereinigt)", en: "Would you like your object returned sterile? (otherwise only cleaned)" },
-            options: [
-              { value: "yes", label: { de: "Ja", en: "Yes" }, nextId: "wash_2" },
-              { value: "no", label: { de: "Nein", en: "No" }, nextId: "result_wash_green" }
-            ]
-          },
-          {
-            id: "wash_2",
-            text: { de: "Wie soll sterilisiert werden?", en: "How should sterilization be carried out?" },
-            options: [
-              { value: "Autoklav", label: { de: "Autoklav (Dampf, 121°C)", en: "Autoclave (steam, 121°C)" }, nextId: "result_wash_blue" },
-              { value: "Ofen", label: { de: "Ofen (trocken, 200°C)", en: "Oven (dry, 200°C)" }, nextId: "result_wash_orange" }
-            ]
-          },
-          {
-            id: "contliq_2",
-            text: { de: "Wie soll sterilisiert werden?", en: "How should sterilization be carried out?" },
-            options: [
-              { value: "Autoklav", label: { de: "Autoklav (Dampf, 121°C)", en: "Autoclave (steam, 121°C)" }, nextId: "result_liq_blue" },
-              { value: "Ofen", label: { de: "Ofen (trocken, 200°C)", en: "Oven (dry, 200°C)" }, nextId: "result_liq_orange" }
-            ]
-          },
+          
           // ===== Ergebnis-Knoten =====
 {
   id: "result_solid",
-  image: "pic/tool_solid.png",
-  image_mobile: "pic/tool_solid_mobile.png",
+  image: "pic/lab_solid_web.png",
+  image_mobile: "pic/lab_solid_mobile.png",
 text: {
     de: `
 <ul>
-  <li>Autoklavierbeutel</li>
+  <li>Autoklavierbeutel (Labore bestücken selbst)</li>
   <li>Abfallsammler mit Risikogruppenschild, ab Risikogruppe 2 + Biohazard-Zeichen</li>
-  <li>Indikatorband</li>
+  <li>Gut sichtbar und eindeutig beschriftet für die KSE zugänglich aufstellen.</li>
+  <li>Der KSE muss bei der Unterweisung gezeigt werden, wo der Abfall gesammelt wird.</li>
 </ul>
 `,
     en: `
 <ul>
-  <li>Autoclave bags</li>
+  <li>Autoclave bags (laboratories must supply their own contents)</li>
   <li>Waste collectors with risk group label, from risk group 2 + biohazard symbol</li>
-  <li>Indicator tape</li>
+  <li>Place it in a location that is clearly visible and clearly labeled so that the KSE can access it.</li>
+  <li>During the instruction, the KSE must be shown where the waste is collected.</li>
 </ul>
 `
  },
@@ -172,25 +111,19 @@ text: {
 },
 {
   id: "result_sharp",
-  image: "pic/tool_sharp.png",
-  image_mobile: "pic/tool_sharp_mobile.png",
+  image: "pic/lab_sharp_web.png",
+  image_mobile: "pic/lab_sharp_mobile.png",
   text: {
     de: `
 <ul>
-  <li>Kanülenbox</li>
-  <li>Risikogruppe</li>
-  <li>Zusatz „Müll“, „Abfall“ oder „waste“</li>
-  <li>Indikatorband</li>
-  <li>nicht einrasten beim verschließen, nur lose auflegen und mit Tape sichern</li>
+  <li>Eine Kanülenbox wird in der Wanne mit Flüssigabfall bereitgestellt.</li>
+  <li>Siehe Flüssigabfall</li>
 </ul>
 `,
     en: `
 <ul>
-  <li>Needle box</li>
-  <li>Risk group</li>
-  <li>Addition of “Müll,” “Abfall,” or “waste”</li>
-  <li>Indicator tape</li>
-  <li>Do not snap shut when closing, just place loosely on top and secure with tape</li>
+  <li>A needle box is placed in the tub with the liquid waste.</li>
+  li>See Liquid Waste</li>
 </ul>
 `
  },
@@ -198,221 +131,67 @@ text: {
 },
 {
   id: "result_media",
-  image: "pic/tool_oven.png",
-  image_mobile: "pic/tool_oven_mobile.png",
+  image: "pic/lab_media_web.png",
+  image_mobile: "pic/lab_media_mobile.png",
   text: {
     de: `
 <ul>
   <li>Keine Änderungen im Labor nötig!</li>
-  <li>Bereite deine Medien usw. mit der Entscheidungshilfe vor und bringe sie in die Spülküche.</li>
+  <li>Bereite die Medien usw. mit der Entscheidungshilfe vor und bringe sie in die Spülküche.</li>
 </ul>
 `,
     en: `
 <ul>
   <li>No changes are needed in the lab!</li>
-  <li>Prepare your media, etc., using the decision-making guide, and bring them to the scullery.</li>
+  <li>Prepare the media, etc., using the decision-making guide, and bring them to the scullery.</li>
 </ul>
 `
  },
   options: []
 },
 {
-  id: "result_media_a",
-  image: "pic/tool_a.png",
-  image_mobile: "pic/tool_a_mobile.png",
+  id: "result_liq",
+  image: "pic/lab_liquid_web.png",
+  image_mobile: "pic/lab_liquid_mobile.png",
 text: {
     de: `
 <ul>
-  <li>autoklavierbeständig</li>
-  <li>Flaschen nicht mehr als 2/3 gefüllt</li>
-  <li>Raumnummer mit Etagen- und ggfs. Gebäudeteilnummer</li>
-  <li>Indikatorband + "A" (= Autoklav)</li>
-  <li>Abgabe in der Spülküche (Medien bis 9:00 für Bearbeitung am selben Tag)</li>
+  <li>Wanne mit eindeutiger Kennzeichnung "Flüssigmüll"</li>
+  <li>Die Wanne muss deutlich von der mit Spülgut zu unterscheiden sein.</li>
+  <li>Gut sichtbar und eindeutig beschriftet für die KSE zugänglich aufstellen.</li>
+  <li>Der KSE muss bei der Unterweisung gezeigt werden, wo der Abfall gesammelt wird.</li>
 </ul>
 `,
     en: `
 <ul>
-  <li>Autoclavable</li>
-  <li>Bottles no more than 2/3 full</li>
-  <li>Room number with floor and, if applicable, building section number</li>
-  <li>Indicator tape + “A” (= autoclave)</li>
-  <li>Drop off in the scullery (media by 9:00 a.m. for same-day processing)</li>
+  <li>Tray clearly labeled “Liquid Waste”</li>
+  <li>The tray must be clearly distinguishable from the one containing rinse items.</li>
+  <li>Place it in a location that is clearly visible and clearly labeled so that the KSE can access it.</li>
+  <li>During the instruction, the KSE must be shown where the waste is collected.</li>
 </ul>
 `
  },
   options: []
 },
 {
-  id: "result_media_agar",
-  image: "pic/tool_agar.png",
-  image_mobile: "pic/tool_agar_mobile.png",
-text: {
-    de: `
-<ul>
-  <li>autoklavierbeständig</li>
-  <li>Flaschen nicht mehr als 2/3 gefüllt</li>
-  <li>Raumnummer mit Etagen- und ggfs. Gebäudeteilnummer</li>
-  <li>Indikatorband + "Agar" (= Code für 60°C Wasserbad)</li>
-  <li>Abgabe in der Spülküche (bis 9:00 für Bearbeitung am selben Tag)</li>
-</ul>
-`,
-    en: `
-<ul>
-  <li>Autoclavable</li>
-  <li>Bottles no more than 2/3 full</li>
-  <li>Room number with floor and, if applicable, building section number</li>
-  <li>Indicator tape + “Agar” (= code for 60°C water bath)</li>
-  <li>Drop off in the scullery (by 9:00 a.m. for same-day processing)</li>
-</ul>
-`
- },
-  options: []
-},
-{
-  id: "result_liq_green",
-  image: "pic/tool_liq_green.png",
-  image_mobile: "pic/tool_liq_green_mobile.png",
+  id: "result_wash",
+  image: "pic/lab_wash_web.png",
+  image_mobile: "pic/lab_wash_mobile.png",
   text: {
     de: `
 <ul>
-  <li>Indikatorband</li>
-  <li>Risikogruppe ("S1", "S2")</li>
-  <li>Zusatz „Müll“, „Abfall“ oder „waste“</li>
-  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
-  <li>grünes Klebeband</li>
-  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
+  <<li>Wanne mit eindeutiger Kennzeichnung "Nur Spülgut"</li>
+  <li>Die Wanne muss deutlich von der mit Flüssigmüll zu unterscheiden sein.</li>
+  <li>Gut sichtbar und eindeutig beschriftet für die KSE zugänglich aufstellen.</li>
+  <li>Der KSE muss bei der Unterweisung gezeigt werden, wo der Abfall gesammelt wird.</li>
 </ul>
 `,
     en: `
 <ul>
-  <li>Indicator tape</li>
-  <li>Risk group ("S1", "S2")</li>
-  <li>Addition of “Müll” “Abfall” or “waste”</li>
-  <li>Room number including floor and, if applicable, building section</li>
-  <li>green tape</li>
-  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
-</ul>
-`
-  },
-  options: []
-},
-{
-  id: "result_liq_blue",
-  image: "pic/tool_liq_blue.png",
-  image_mobile: "pic/tool_liq_blue_mobile.png",
-  text: {
-    de: `
-<ul>
-  <li>Indikatorband</li>
-  <li>Risikogruppe ("S1", "S2")</li>
-  <li>Zusatz „Müll“, „Abfall“ oder „waste“</li>
-  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
-  <li>blaues Klebeband</li>
-  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
-</ul>
-`,
-    en: `
-<ul>
-  <li>Indicator tape</li>
-  <li>Risk group ("S1", "S2")</li>
-  <li>Addition of “Müll” “Abfall” or “waste”</li>
-  <li>Room number including floor and, if applicable, building section</li>
-  <li>blue tape</li>
-  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
-</ul>
-`
-  },
-  options: []
-},
-{
-  id: "result_liq_orange",
-  image: "pic/tool_liq_yellow.png",
-  image_mobile: "pic/tool_liq_yellow_mobile.png",
-text: {
-    de: `
-<ul>
-  <li>Indikatorband</li>
-  <li>Risikogruppe ("S1", "S2")</li>
-  <li>Zusatz „Müll“, „Abfall“ oder „waste“</li>
-  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
-  <li>gelbes Klebeband</li>
-  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
-</ul>
-`,
-    en: `
-<ul>
-  <li>Indicator tape</li>
-  <li>Risk group ("S1", "S2")</li>
-  <li>Addition of “Müll” “Abfall” or “waste”</li>
-  <li>Room number including floor and, if applicable, building section</li>
-  <li>yellow tape</li>
-  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
-</ul>
-`
-  },
-  options: []
-},
-{
-  id: "result_wash_green",
-  image: "pic/tool_wash_green.png",
-  image_mobile: "pic/tool_wash_green_mobile.png",
-  text: {
-    de: `
-<ul>
-  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
-  <li>grünes Klebeband</li>
-  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
-</ul>
-`,
-    en: `
-<ul>
-  <li>Room number including floor and, if applicable, building section</li>
-  <li>green tape</li>
-  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
-</ul>
-`
-  },
-  options: []
-},
-{
-  id: "result_wash_blue",
-  image: "pic/tool_wash_blue.png",
-  image_mobile: "pic/tool_wash_blue_mobile.png",
-  text: {
-    de: `
-<ul>
-  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
-  <li>blaues Klebeband</li>
-  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
-</ul>
-`,
-    en: `
-<ul>
-  <li>Room number including floor and, if applicable, building section</li>
-  <li>blue tape</li>
-  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
-</ul>
-`
-  },
-  options: []
-},
-{
-  id: "result_wash_orange",
-  image: "pic/tool_wash_yellow.png",
-  image_mobile: "pic/tool_wash_yellow_mobile.png",
-  text: {
-    de: `
-<ul>
-  <li>Raumnummer inkl. Stockwerk und ggfs. Gebäudeteil</li>
-  <li>gelbes Klebeband</li>
-  <li>Sammlung im Labor in beschrifteter Wanne, wird abgeholt und gebracht</li>
-</ul>
-`,
-    en: `
-<ul>
-  <li>Room number including floor and, if applicable, building section</li>
-  <li>yellow tape</li>
-  <li>Collection in the laboratory in a labeled container, will be picked up and delivered</li>
+  <li>Tray clearly labeled “Dishwashing items only”</li>
+  <li>The tray must be clearly distinguishable from the one containing liquid waste.</li>
+  <li>Place it in a location that is clearly visible and clearly labeled so that the KSE can access it.</li>
+  <li>During the instruction, the KSE must be shown where the waste is collected.</li>
 </ul>
 `
   },
